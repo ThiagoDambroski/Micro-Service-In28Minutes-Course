@@ -1,14 +1,20 @@
 package com.dambroski.restfulwebservicein28Minutes.user;
 
+import java.net.URI;
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import com.dambroski.restfulwebservicein28Minutes.error.UserNotFoundException;
 
 @RestController
 @RequestMapping("/users")
@@ -24,13 +30,22 @@ public class UserResource {
 	}
 	
 	@GetMapping("/get/{id}")
-	public User getUserById(@PathVariable("id") Long id) {
-		return service.getUserById(id);
+	public User getUserById(@PathVariable("id") Long id){
+		User user = service.getUserById(id);
+		if(user==null) {
+			throw new UserNotFoundException("id " + id + " not found");
+		}
+		return user;
 	}
 	
 	@PostMapping("/post")
-	public User postUser(@RequestBody User user) {
-		return service.postUser(user);
+	public ResponseEntity<User> postUser(@RequestBody User user) {
+		User newUser = service.postUser(user);
+		URI location = ServletUriComponentsBuilder
+				.fromPath("localhost:8080/users/get/{id}")
+				.buildAndExpand(newUser.getId())
+				.toUri();
+		return ResponseEntity.created(location).build();
 	}
 	
 

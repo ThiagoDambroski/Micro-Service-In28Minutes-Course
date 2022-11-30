@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 
 
@@ -39,6 +40,15 @@ public class UserDaoService {
 		users.add(user);
 		return user;
 	
+	}
+
+
+	public void deleteById(Long id) {
+		
+		Predicate<? super User> predicate = user -> user.getId().equals(id);
+		users.removeIf(predicate);
+
+		
 	}
 	
 

@@ -5,6 +5,8 @@ import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,12 +36,17 @@ public class UserResource {
 	}
 	
 	@GetMapping("/get/{id}")
-	public User getUserById(@PathVariable("id") Long id){
+	public  EntityModel<User>  getUserById(@PathVariable("id") Long id){
 		User user = service.getUserById(id);
 		if(user==null) {
 			throw new UserNotFoundException("id " + id + " not found");
 		}
-		return user;
+		EntityModel<User> entityModel = EntityModel.of(user);
+		
+		// Is here there u will put the link u want
+		WebMvcLinkBuilder link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).getAllUser());
+		
+		return entityModel;
 	}
 	
 	@PostMapping("/post")

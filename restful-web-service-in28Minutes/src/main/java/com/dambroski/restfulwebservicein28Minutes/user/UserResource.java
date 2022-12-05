@@ -45,6 +45,8 @@ public class UserResource {
 		
 		// Is here there u will put the link u want
 		WebMvcLinkBuilder link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).getAllUser());
+		entityModel.add(link.withRel("all-users")); // u specify where the link is linked
+		
 		
 		return entityModel;
 	}

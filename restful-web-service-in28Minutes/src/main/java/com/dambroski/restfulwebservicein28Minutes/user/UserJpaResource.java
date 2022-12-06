@@ -23,7 +23,7 @@ import com.dambroski.restfulwebservicein28Minutes.error.UserNotFoundException;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/jpa")
+@RequestMapping("/jpa/users")
 public class UserJpaResource {
 	
 	@Autowired
@@ -72,14 +72,14 @@ public class UserJpaResource {
 		repository.deleteById(id);
 	}
 	
-	@GetMapping("/jpa/users/{id}/posts")
+	@GetMapping("/userPosts/{id}")
 	public List<Post> getAllPost(@PathVariable(name = "id") Long id){
 		User user = repository.findById(id).get();
 		List<Post> listPosts = user.getListPost();
 		return listPosts;
-	}
+	} 
 	
-	@PostMapping("/jpa/user/{id}/post")
+	@PostMapping("/userPosting/{id}")
 	public ResponseEntity<Object> postPost(@Valid @RequestBody Post post, @PathVariable(name = "id") Long id) {
 		
 		Optional<User> user = repository.findById(id);
@@ -93,7 +93,7 @@ public class UserJpaResource {
 				.path("/{id}")
 				.buildAndExpand(savedPost.getId())
 				.toUri();
-		return ResponseEntity.created(location).build();
+		return ResponseEntity.created(location).build(); 
 		
 		
 	}

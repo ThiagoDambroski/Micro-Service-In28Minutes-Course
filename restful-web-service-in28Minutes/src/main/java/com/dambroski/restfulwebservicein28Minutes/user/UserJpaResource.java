@@ -2,7 +2,7 @@ package com.dambroski.restfulwebservicein28Minutes.user;
 
 import java.net.URI;
 import java.util.List;
-
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
@@ -31,6 +31,9 @@ public class UserJpaResource {
 	
 	@Autowired
 	UserRepository repository;
+	
+	@Autowired
+	PostRepository postRepository;
 	
 	
 	@GetMapping("/getAll")
@@ -67,6 +70,32 @@ public class UserJpaResource {
 	@DeleteMapping("/delete/{id}")
 	public void deleteById(@PathVariable("id") Long id) {
 		repository.deleteById(id);
+	}
+	
+	@GetMapping("/jpa/users/{id}/posts")
+	public List<Post> getAllPost(@PathVariable(name = "id") Long id){
+		User user = repository.findById(id).get();
+		List<Post> listPosts = user.getListPost();
+		return listPosts;
+	}
+	
+	@PostMapping("/jpa/user/{id}/post")
+	public ResponseEntity<Object> postPost(@Valid @RequestBody Post post, @PathVariable(name = "id") Long id) {
+		
+		Optional<User> user = repository.findById(id);
+		if(user.isEmpty()) {
+			throw new UserNotFoundException();
+		}
+		post.setUser(user.get());
+		Post savedPost = postRepository.save(post);
+		
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}")
+				.buildAndExpand(savedPost.getId())
+				.toUri();
+		return ResponseEntity.created(location).build();
+		
+		
 	}
 	
 

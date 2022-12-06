@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ public class Post {
 	@GeneratedValue(generator = "post_id",strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Size(min = 10)
 	private String description;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

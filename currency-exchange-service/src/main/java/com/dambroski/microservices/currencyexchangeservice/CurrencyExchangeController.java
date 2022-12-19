@@ -17,7 +17,7 @@ public class CurrencyExchangeController {
 	@Autowired
 	private CurrencyExchangeRepository repository;
 	
-	@GetMapping("/currencey-exchange/from/{coin1}/to/{coin2}")
+	@GetMapping("/currencey-excange/from/{coin1}/to/{coin2}")
 	public CurrenctyExchange retriveExchangeValue(@PathVariable("coin1")String coin1,@PathVariable("coin2") String coin2)
 			throws Exception {
 		CurrenctyExchange currencty = repository.findByCoin1AndCoin2(coin1, coin2);

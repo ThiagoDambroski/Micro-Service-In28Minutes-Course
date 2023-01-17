@@ -14,6 +14,31 @@ services:
       EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
       
 
+  currency-conversion:
+    image: thiagodambroski/mmv2-currency-conversion:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8100:8100"
+    networks:
+      - currency-network
+    depends_on:
+    - naming-server
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka    
+
+  spring-cloud-api-gateway:
+    image: thiagodambroski/mmv2-spring-cloud-api-gateway:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8765:8765"
+    networks:
+      - currency-network
+    depends_on:
+    - naming-server
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka 
+     
+
   
   naming-server:
     image: thiagodambroski/mmv2-naming-server:0.0.1-SNAPSHOT
